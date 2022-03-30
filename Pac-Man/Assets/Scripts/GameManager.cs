@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     private float timeToStart = 0;
     private bool dead = false;
     private int pacdotCount = 0;
+    private bool _isGameOver = false;
 
 
 
@@ -114,9 +115,15 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        _isGameOver = true;
         dead = true;
         timeToStart = 0;
         retryButton.SetActive(true);
+    }
+
+    public bool isGameOver()
+    {
+        return _isGameOver;
     }
 
     public void ScareGhosts()
@@ -181,6 +188,7 @@ public class GameManager : MonoBehaviour
 
         started = false;
         dead = false;
+        _isGameOver = false;
         retryButton.SetActive(false);
         winText.gameObject.SetActive(false);
         readyText.gameObject.SetActive(true);

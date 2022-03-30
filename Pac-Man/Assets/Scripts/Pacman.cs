@@ -25,10 +25,8 @@ public class Pacman : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(gameManager.GetStarted() && !gameManager.GetDead())
-        {
+        if(gameManager.GetStarted() && !gameManager.GetDead() && !gameManager.isGameOver())
             Movement();
-        }
     }
 
     private void Movement()
@@ -101,6 +99,7 @@ public class Pacman : MonoBehaviour
         lifeSprites[lives].SetActive(false);
         if (lives <= 0)
         {
+            gameManager.isDead(true);
             gameManager.GameOver();
         }
         
@@ -152,7 +151,10 @@ public class Pacman : MonoBehaviour
         yield return new WaitForSeconds(1);
         GetComponent<Animator>().SetBool("Die", false);
         deadPlaying = false;
-        gameManager.isDead(false);
+        if(!gameManager.isGameOver())
+        {
+            gameManager.isDead(false);
+        } 
         ResetPos();
     }
 }
