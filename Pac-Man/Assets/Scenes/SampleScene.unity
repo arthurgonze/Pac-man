@@ -476,6 +476,26 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 50119380554213420, guid: 2dd614eef16c39a4a969f5bcb1438525,
+        type: 3}
+      propertyPath: m_SleepingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 50119380554213420, guid: 2dd614eef16c39a4a969f5bcb1438525,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 58585688737086380, guid: 2dd614eef16c39a4a969f5bcb1438525,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 114455595495457938, guid: 2dd614eef16c39a4a969f5bcb1438525,
+        type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 114455595495457938, guid: 2dd614eef16c39a4a969f5bcb1438525,
         type: 3}
       propertyPath: killCount

@@ -8,7 +8,7 @@ public class Pacman : MonoBehaviour
     [SerializeField] int lives = 3;
     [SerializeField] GameObject[] pointSprites;
     [SerializeField] GameObject[] lifeSprites;
-    [Range(0, 4)] [SerializeField] int killCount = 0;
+    [Range(0, 4)][SerializeField] int killCount = 0;
 
     Vector2 dest = Vector2.zero;
     GameManager gameManager;
@@ -23,56 +23,77 @@ public class Pacman : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    // void Update()
+    // {
+    //     MovementInput();
+    //     MovementAnimation();
+    // }
+
+    private void Update()
     {
-        if(gameManager.GetStarted() && !gameManager.GetDead() && !gameManager.isGameOver())
+        if (gameManager.GetStarted() && !gameManager.GetDead() && !gameManager.isGameOver())
             Movement();
     }
 
     private void Movement()
     {
         // Move closer to Destination
-        Vector2 p = Vector2.MoveTowards(transform.position, dest, speed);
-        GetComponent<Rigidbody2D>().MovePosition(p);
+        // Vector2 p = Vector2.MoveTowards(transform.position, dest, speed*Time.deltaTime);
+        // GetComponent<Rigidbody2D>().MovePosition(p);
 
-        MovementInput();
-        MovementAnimation();
+        if (MovementInput())
+            MovementAnimation();
+        else
+            IdleAnimation();
     }
 
     private void MovementAnimation()
     {
         // Animation Parameters
-        Vector2 dir = dest - (Vector2)transform.position;
+        Vector2 dir = (Vector2)transform.position - dest;
         GetComponent<Animator>().SetFloat("DirX", dir.x);
         GetComponent<Animator>().SetFloat("DirY", dir.y);
     }
 
-    private void MovementInput()
+    private void IdleAnimation()
+    {
+        GetComponent<Animator>().SetFloat("DirX", 1);
+        GetComponent<Animator>().SetFloat("DirY", 0);
+    }
+
+    private bool MovementInput()
     {
         // Check for Input if not moving
-        if ((Vector2)transform.position == dest)
+        // if ((Vector2)transform.position == dest)
+        // {
+        dest = (Vector2)transform.position;
+        if (Input.GetAxis("Vertical") > 0 && Valid(Vector2.up * Time.deltaTime * speed))
         {
-            //up
-            if (Input.GetAxis("Vertical") > 0 && Valid(Vector2.up))
-            {
-                dest = (Vector2)transform.position + Vector2.up;
-            }
-            //right
-            if (Input.GetAxis("Horizontal") > 0 && Valid(Vector2.right))
-            {
-                dest = (Vector2)transform.position + Vector2.right;
-            }
-            //down
-            if (Input.GetAxis("Vertical") < 0 && Valid(-Vector2.up))
-            {
-                dest = (Vector2)transform.position - Vector2.up;
-            }
-            //left
-            if (Input.GetAxis("Horizontal") < 0 && Valid(-Vector2.right))
-            {
-                dest = (Vector2)transform.position - Vector2.right;
-            }
+            transform.position = (Vector2)transform.position + (Vector2.up * Time.deltaTime * speed);
+            return true;
         }
+
+        if (Input.GetAxis("Horizontal") > 0 && Valid(Vector2.right * Time.deltaTime * speed))
+        {
+            transform.position = (Vector2)transform.position + (Vector2.right * Time.deltaTime * speed);
+            return true;
+        }
+
+
+        if (Input.GetAxis("Vertical") < 0 && Valid(-Vector2.up * Time.deltaTime * speed))
+        {
+            transform.position = (Vector2)transform.position - (Vector2.up * Time.deltaTime * speed);
+            return true;
+        }
+
+
+        if (Input.GetAxis("Horizontal") < 0 && Valid(-Vector2.right * Time.deltaTime * speed))
+        {
+            transform.position = (Vector2)transform.position - (Vector2.right * Time.deltaTime * speed);
+            return true;
+        }
+        
+        return false;
     }
 
     /**
@@ -84,8 +105,6 @@ public class Pacman : MonoBehaviour
         Vector2 pos = transform.position;
         RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
         return (hit.collider == GetComponent<Collider2D>());
-
-        //Note: I simply casted the Line from the point next to Pac-Man (pos + dir) to Pac-Man himself (pos).
     }
 
     public void LoseLife()
@@ -102,7 +121,7 @@ public class Pacman : MonoBehaviour
             gameManager.isDead(true);
             gameManager.GameOver();
         }
-        
+
     }
 
     public int GetLives()
@@ -112,7 +131,7 @@ public class Pacman : MonoBehaviour
 
     public void ResetLives()
     {
-        lives=3;
+        lives = 3;
 
         foreach (GameObject life in lifeSprites)
         {
@@ -151,10 +170,10 @@ public class Pacman : MonoBehaviour
         yield return new WaitForSeconds(1);
         GetComponent<Animator>().SetBool("Die", false);
         deadPlaying = false;
-        if(!gameManager.isGameOver())
+        if (!gameManager.isGameOver())
         {
             gameManager.isDead(false);
-        } 
+        }
         ResetPos();
     }
 }
